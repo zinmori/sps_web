@@ -16,7 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/entrée" element={<Entree />} />
+          <Route path="/entree" element={<Entree />} />
           <Route path="/sortie" element={<Sortie />} />
           <Route path="/donneurs" element={<Givers />} />
           <Route path="/report" element={<Report />} />

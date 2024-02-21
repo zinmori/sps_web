@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useMatch, resolvePath } from "react-router-dom";
 import {
   BsBoxArrowInDown,
   BsBoxArrowUp,
@@ -9,35 +9,60 @@ import { FaHandHoldingHeart } from "react-icons/fa";
 import { RiAlarmWarningLine } from "react-icons/ri";
 
 export default function SidebarItem({ title }) {
-  let icon;
+  let Icon;
   switch (title) {
     case "Dashboard":
-      icon = <BsLayoutWtf size={30} />;
+      Icon = BsLayoutWtf;
       break;
     case "Donneurs":
-      icon = <FaHandHoldingHeart size={30} />;
+      Icon = FaHandHoldingHeart;
       break;
     case "Entrée":
-      icon = <BsBoxArrowInDown size={30} />;
+      Icon = BsBoxArrowInDown;
       break;
     case "Sortie":
-      icon = <BsBoxArrowUp size={30} />;
+      Icon = BsBoxArrowUp;
       break;
     case "Urgence":
-      icon = <RiAlarmWarningLine size={30} />;
+      Icon = RiAlarmWarningLine;
       break;
     default:
-      icon = <BsDash size={30} />;
+      Icon = BsDash;
   }
+
+  const path =
+    title === "Dashboard"
+      ? "/"
+      : title === "Entrée"
+      ? "entree"
+      : title.toLowerCase();
+
+  const resolvedPath = resolvePath(path);
+  const isActive = useMatch({ path: resolvedPath.pathname, end: true });
+
   return (
-    <div className="flex flex-row items-center gap-2 m-2 p-2 bg-stone-400 text-white w-4/5 rounded-md">
-      {icon}
-      <Link
-        className="m-2"
-        to={title === "Dashboard" ? "/" : title.toLowerCase()}
+    <Link
+      className="m-1 w-4/5"
+      to={
+        title === "Dashboard"
+          ? "/"
+          : title === "Entrée"
+          ? "entree"
+          : title.toLowerCase()
+      }
+    >
+      <button
+        className={`flex flex-row items-center gap-8 m-1 p-2
+       hover:bg-red-300 hover:text-red-700 
+       w-full rounded-md ${
+         isActive ? "ring-2 ring-red-700 text-red-700" : "text-black"
+       } `}
       >
-        {title}
-      </Link>
-    </div>
+        <p>
+          <Icon size={35} />
+        </p>
+        <p className="font-bold">{title}</p>
+      </button>
+    </Link>
   );
 }
