@@ -5,8 +5,9 @@ import {
   BsLayoutWtf,
   BsDash,
 } from "react-icons/bs";
-import { FaHandHoldingHeart } from "react-icons/fa";
+import { FaHandHoldingDroplet } from "react-icons/fa6";
 import { RiAlarmWarningLine } from "react-icons/ri";
+import { IoDocumentTextOutline } from "react-icons/io5";
 
 export default function SidebarItem({ title }) {
   let Icon;
@@ -15,7 +16,7 @@ export default function SidebarItem({ title }) {
       Icon = BsLayoutWtf;
       break;
     case "Donneurs":
-      Icon = FaHandHoldingHeart;
+      Icon = FaHandHoldingDroplet;
       break;
     case "Entrée":
       Icon = BsBoxArrowInDown;
@@ -25,6 +26,9 @@ export default function SidebarItem({ title }) {
       break;
     case "Urgence":
       Icon = RiAlarmWarningLine;
+      break;
+    case "Report":
+      Icon = IoDocumentTextOutline;
       break;
     default:
       Icon = BsDash;
@@ -52,7 +56,7 @@ export default function SidebarItem({ title }) {
       }
     >
       <button
-        className={`flex flex-row items-center gap-8 m-1 p-2
+        className={`flex flex-row items-center gap-4 p-2
        hover:bg-red-300 hover:text-red-700 
        w-full rounded-md ${
          isActive ? "ring-2 ring-red-700 text-red-700" : "text-black"

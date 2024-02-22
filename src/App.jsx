@@ -10,7 +10,7 @@ import Login from "./pages/Login.jsx";
 
 function App() {
   return (
-    <main className="flex h-screen gap-4">
+    <main className="flex h-screen">
       <Router>
         <Sidebar />
         <Routes>

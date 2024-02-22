@@ -11,6 +11,7 @@ export default function Sidebar() {
       <SidebarItem title="Entrée" />
       <SidebarItem title="Sortie" />
       <SidebarItem title="Urgence" />
+      <SidebarItem title="Report" />
       <Footer />
     </aside>
   );
