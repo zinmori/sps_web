@@ -34,27 +34,13 @@ export default function SidebarItem({ title }) {
       Icon = BsDash;
   }
 
-  const path =
-    title === "Dashboard"
-      ? "/"
-      : title === "Entrée"
-      ? "entree"
-      : title.toLowerCase();
+  const path = title === "Entrée" ? "entree" : title.toLowerCase();
 
   const resolvedPath = resolvePath(path);
   const isActive = useMatch({ path: resolvedPath.pathname, end: true });
 
   return (
-    <Link
-      className="m-1 w-4/5"
-      to={
-        title === "Dashboard"
-          ? "/"
-          : title === "Entrée"
-          ? "entree"
-          : title.toLowerCase()
-      }
-    >
+    <Link className="m-1 w-4/5" to={path}>
       <button
         className={`flex flex-row items-center gap-4 p-2
        hover:bg-red-300 hover:text-red-700 
