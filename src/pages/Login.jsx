@@ -1,9 +1,33 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import backgroundImage from "../assets/doctors.jpg";
 import logo from "../assets/sps_logo.png";
 import user from "../assets/account.png";
 
-export default function Login() {
+export default function Login({ login }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+
+  const emails = {
+    cnts: "cnts@gmail.com",
+    afagnan: "afagnan@gmail.com",
+    tokoin: "tokoin@gmail.com",
+    kpalime: "kpalime@gmail.com",
+    kara: "kara@gmail.com",
+    dapaong: "dapaong@gmail.com",
+  };
+
+  async function signIn() {
+    await login(email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        setError(true);
+      });
+  }
+
   return (
     <div className="h-screen relative w-full">
       <div
@@ -28,57 +52,67 @@ export default function Login() {
         </div>
       </div>
 
-      <div className=" flex flex-col items-center absolute top-1/2 w-1/3 h-4/5 right-20 transform -translate-y-1/2 bg-red-700 bg-opacity-75 p-6 rounded-3xl">
+      <div className="flex flex-col items-center absolute top-1/2 w-1/3 h-4/5 right-20 transform -translate-y-1/2 bg-red-700 bg-opacity-75 p-6 rounded-3xl">
         <h2 className="text-2xl font-belleza text-white mb-4">CONNEXION</h2>
         <p>
           <img src={user} alt="user" className="w-24 mx-auto mb-4" />
         </p>
-        <form action="#" method="post" className="w-full">
+        <div className="w-full">
           <div className="mb-8 mx-4">
             <select
               id="center"
               name="center"
+              onChange={(e) => setEmail(emails[e.target.value])}
               className="mt-1 block w-full py-2 px-3 border border-white bg-white rounded-xl"
             >
               <option value="" disabled selected>
                 Choisir le centre
               </option>
-              <option value="center1">
+              <option value="cnts">
                 Centre National de Transfusion Sanguine (CNTS)
               </option>
-              <option value="center2">
+              <option value="tokoin">
                 Poste de Collecte et de Distribution Tokoin CHU (PCD Tokoin)
               </option>
-              <option value="center3">
+              <option value="afagnan">
                 Poste de Collecte et de Distribution Afagnan (PCD Afagnan)
+              </option>
+              <option value="kpalime">
+                Poste de Collecte et de Distribution Kpalimé (PCD Kpalimé)
+              </option>
+              <option value="kara">
+                Poste de Collecte et de Distribution Kara (PCD Kara)
+              </option>
+              <option value="dapaong">
+                Poste de Collecte et de Distribution Dapaong (PCD Dapaong)
               </option>
             </select>
           </div>
           <div className="mb-6 mx-4">
             <input
               type="password"
-              id="password"
-              name="password"
               placeholder="Mot de passe"
-              className="mt-1 block w-full py-2 px-3 border border-white bg-white rounded-xl"
+              onChange={(e) => setPassword(e.target.value)}
+              className={`mt-1 block w-full py-2 px-3 border border-white ${
+                error ? "bg-red-200" : "bg-white"
+              } rounded-xl`}
             />
           </div>
-          <div className="flex justify-between items-center mx-4 mt-16">
-            <Link to="/dashboard">
-              <button
-                type="submit"
-                className="bg-white text-red-600 py-2 px-4 rounded-md hover:bg-red-600 hover:text-white focus:outline-none focus:bg-red-600 focus:text-white"
-              >
-                Se connecter
-              </button>
-            </Link>
+          {error && <p className="text-orange-950">Mot de passe Invalid</p>}
+          <div className="flex justify-between items-center mx-4 mt-8">
+            <button
+              className="bg-white text-red-600 py-2 px-4 rounded-md hover:bg-red-600 hover:text-white focus:outline-none focus:bg-red-600 focus:text-white"
+              onClick={signIn}
+            >
+              Se connecter
+            </button>
 
             <a href="#" className="underline text-white hover:text-blue-500">
               Mot de passe oublié ?
             </a>
           </div>
-        </form>
-        <div className="mt-8">
+        </div>
+        <div className="mt-4">
           <p className="text-white">
             Vous ne trouvez pas votre centre de don dans la liste ?{" "}
             <a href="#" className="hover:text-blue-500 underline">

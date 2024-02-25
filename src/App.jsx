@@ -1,42 +1,56 @@
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { auth } from "./firebase-config.js";
 import Dashboard from "./pages/Dashboard.jsx";
 import Entree from "./pages/Entree.jsx";
 import Sortie from "./pages/Sortie.jsx";
 import Givers from "./pages/Givers.jsx";
-import Report from "./pages/Report.jsx";
+import Rapport from "./pages/Rapport.jsx";
 import Urgence from "./pages/Urgence.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import Login from "./pages/Login.jsx";
+import { useState, useEffect } from "react";
 
 function App() {
-  return (
-    <Router>
-      <AppContent />
-    </Router>
-  );
-}
+  const [user, setUser] = useState(null);
 
-function AppContent() {
-  const location = useLocation();
-  const isLoginPage = location.pathname === "/";
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+  }, []);
+
+  async function login(email, password) {
+    await signInWithEmailAndPassword(auth, email, password);
+  }
+
+  async function logout() {
+    await signOut(auth);
+  }
 
   return (
     <main className="flex h-screen">
-      {!isLoginPage && <Sidebar />}
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/entree" element={<Entree />} />
-        <Route path="/sortie" element={<Sortie />} />
-        <Route path="/donneurs" element={<Givers />} />
-        <Route path="/report" element={<Report />} />
-        <Route path="/urgence" element={<Urgence />} />
-      </Routes>
+      {user ? (
+        <>
+          <Router>
+            <Sidebar logout={logout} />
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/entree" element={<Entree />} />
+              <Route path="/sortie" element={<Sortie />} />
+              <Route path="/donneurs" element={<Givers />} />
+              <Route path="/rapport" element={<Rapport />} />
+              <Route path="/urgence" element={<Urgence />} />
+            </Routes>
+          </Router>
+        </>
+      ) : (
+        <Login login={login} />
+      )}
     </main>
   );
 }
