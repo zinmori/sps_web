@@ -2,11 +2,13 @@ import { useState } from "react";
 import backgroundImage from "../assets/doctors.jpg";
 import logo from "../assets/sps_logo.png";
 import user from "../assets/account.png";
+import Progress from "../components/Progress.jsx";
 
 export default function Login({ login }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const emails = {
     cnts: "cnts@gmail.com",
@@ -18,6 +20,7 @@ export default function Login({ login }) {
   };
 
   async function signIn() {
+    setIsWaiting(true);
     await login(email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -26,10 +29,12 @@ export default function Login({ login }) {
       .catch((error) => {
         setError(true);
       });
+    setIsWaiting(false);
   }
 
   return (
     <div className="h-screen relative w-full">
+      {isWaiting && <Progress />}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
@@ -62,10 +67,11 @@ export default function Login({ login }) {
             <select
               id="center"
               name="center"
+              defaultValue=""
               onChange={(e) => setEmail(emails[e.target.value])}
               className="mt-1 block w-full py-2 px-3 border border-white bg-white rounded-xl"
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Choisir le centre
               </option>
               <option value="cnts">
