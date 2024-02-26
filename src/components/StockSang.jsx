@@ -21,7 +21,7 @@ export default function StockSang() {
       setStock(data.docs.map((doc) => ({ ...doc.data() })));
     };
     getStock();
-  });
+  }, []);
 
   const sortedStock = stock.slice().sort((a, b) => {
     const groupeA = a.groupe.replace(/[+-]/g, "");
