@@ -113,17 +113,17 @@ export default function Login({ login }) {
               Se connecter
             </button>
 
-            <a href="#" className="underline text-white hover:text-blue-500">
+            <button className="underline text-white hover:text-blue-500">
               Mot de passe oublié ?
-            </a>
+            </button>
           </div>
         </div>
         <div className="mt-4">
           <p className="text-white">
             Vous ne trouvez pas votre centre de don dans la liste ?{" "}
-            <a href="#" className="hover:text-blue-500 underline">
+            <button className="hover:text-blue-500 underline">
               Contactez-nous
-            </a>{" "}
+            </button>{" "}
             pour créer un compte.
           </p>
         </div>

@@ -14,6 +14,7 @@ import Urgence from "./pages/Urgence.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import Login from "./pages/Login.jsx";
 import { useState, useEffect } from "react";
+import { LimitProvider } from "./utils/Context.jsx";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -35,7 +36,7 @@ function App() {
   return (
     <main className="flex h-screen">
       {user ? (
-        <>
+        <LimitProvider>
           <Router>
             <Sidebar logout={logout} />
             <Routes>
@@ -47,7 +48,7 @@ function App() {
               <Route path="/urgence" element={<Urgence />} />
             </Routes>
           </Router>
-        </>
+        </LimitProvider>
       ) : (
         <Login login={login} />
       )}

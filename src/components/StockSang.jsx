@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { db } from "../firebase-config.js";
 import { collection, getDocs } from "firebase/firestore";
 import { defaults } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
+import { LimitContext } from "../utils/Context.jsx";
 
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
@@ -13,9 +14,10 @@ defaults.plugins.title.color = "black";
 
 export default function StockSang() {
   const [stock, setStock] = useState([]);
-  const stockCollectionRef = collection(db, "stock");
+  const { limite, updateLimite } = useContext(LimitContext);
 
   useEffect(() => {
+    const stockCollectionRef = collection(db, "stock");
     const getStock = async () => {
       const data = await getDocs(stockCollectionRef);
       setStock(data.docs.map((doc) => ({ ...doc.data() })));
@@ -38,15 +40,28 @@ export default function StockSang() {
       {
         label: "Positif",
         data: positif.map((item) => item.quantite),
-        backgroundColor: "rgba(0, 0, 255, 1)",
+        backgroundColor: "rgba(220, 38, 38, 0.5)",
+        borderColor: "rgba(220, 38, 38, 1)",
+        borderWidth: 4,
       },
       {
         label: "Negatif",
         data: negatif.map((item) => item.quantite),
-        backgroundColor: "rgba(253, 255, 3, 1)",
+        backgroundColor: "rgba(109, 40, 217, 0.5)",
+        borderColor: "rgba(109, 40, 217, 1)",
+        borderWidth: 4,
       },
     ],
   };
+
+  function getColor(value, opacity) {
+    if (value === parseInt(limite)) {
+      return "rgba(185, 28, 28, 1)";
+    } else {
+      return "rgba(255, 255, 255, " + opacity + ")";
+    }
+  }
+
   const options = {
     plugins: {
       title: {
@@ -75,25 +90,16 @@ export default function StockSang() {
       },
       y: {
         grid: {
-          color: function (context) {
-            if (context.tick.value === 100) {
-              return "rgba(80, 0, 0, 1)";
-            } else {
-              return "rgba(255, 255, 255, 0.2)";
-            }
-          },
+          color: (context) => getColor(context.tick.value, "0.2"),
         },
         ticks: {
+          stepSize: 50,
+          min: 0,
+          max: Math.max(...stock.map((item) => item.quantite)),
           font: {
             weight: "bold",
           },
-          color: function (context) {
-            if (context.tick.value === 100) {
-              return "rgba(80, 0, 0, 1)";
-            } else {
-              return "rgba(255, 255, 255, 1)";
-            }
-          },
+          color: (context) => getColor(context.tick.value, "1"),
         },
       },
     },
@@ -101,10 +107,35 @@ export default function StockSang() {
 
   return (
     <div className="h-screen w-full">
-      <div className="w-full h-2/5 mb-1 bg-green-600 rounded-xl"></div>
-      <div className="w-full h-3/5">
+      <div className="w-full h-1/3 mb-1 p-6 bg-gradient-to-b from-red-300 to-slate-200 rounded-xl flex flex-row items-center justify-between">
+        <div>
+          <h2 className="font-semibold text-lg">Groupes sanguins en manque</h2>
+          <ul className="font-light">
+            {stock
+              .filter((item) => item.quantite < limite)
+              .map((item) => (
+                <li key={item.groupe}>
+                  {item.groupe} : {item.quantite} poches disponibles
+                </li>
+              ))}
+          </ul>
+        </div>
+        <div className="flex flex-row gap-2">
+          <h2 className="font-semibold">Changer la limite</h2>
+          <select
+            className="w-24 rounded-md"
+            onChange={(event) => updateLimite(event.target.value)}
+          >
+            <option value={100}>100</option>
+            <option value={200}>200</option>
+            <option value={300}>300</option>
+            <option value={400}>400</option>
+          </select>
+        </div>
+      </div>
+      <div className="w-full h-2/3">
         <Bar
-          className="bg-gradient-to-t from-red-700 to-yellow-700 rounded-xl p-4"
+          className="bg-gradient-to-t from-slate-900 to-slate-200 rounded-xl p-4"
           color="#fff"
           data={data}
           options={options}
