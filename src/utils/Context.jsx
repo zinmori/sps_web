@@ -17,9 +17,9 @@ export const LimitProvider = ({ children }) => {
   }, []);
 
   async function updateLimite(newLimite) {
+    setLimite(newLimite);
     const limiteDocumentRef = doc(db, "limite/1");
     await updateDoc(limiteDocumentRef, { limite: parseInt(newLimite) });
-    setLimite(newLimite);
   }
 
   return (

@@ -8,7 +8,7 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 
 export default function Sidebar({ logout }) {
   return (
-    <aside className="border-r-2 w-1/4 h-screen flex flex-col items-center">
+    <aside className="border-r-2 w-1/4 h-screen flex flex-col items-center bg-red-50">
       <Banner />
       <SidebarItem title="Dashboard" icon={BsLayoutWtf} />
       <SidebarItem title="Donneurs" icon={FaHandHoldingDroplet} />

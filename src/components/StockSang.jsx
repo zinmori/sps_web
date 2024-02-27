@@ -58,7 +58,7 @@ export default function StockSang() {
     if (value === parseInt(limite)) {
       return "rgba(185, 28, 28, 1)";
     } else {
-      return "rgba(255, 255, 255, " + opacity + ")";
+      return "rgba(0, 0, 0, " + opacity + ")";
     }
   }
 
@@ -72,25 +72,25 @@ export default function StockSang() {
           font: {
             weight: "bold",
           },
-          color: "rgba(255, 255, 255, 1)",
+          color: "rgba(0, 0, 0, 1)",
         },
       },
     },
     scales: {
       x: {
         grid: {
-          color: "rgba(255, 255, 255, 0.2)",
+          color: "rgba(0, 0, 0, 0.1)",
         },
         ticks: {
           font: {
             weight: "bold",
           },
-          color: "rgba(255, 255, 255, 1)",
+          color: "rgba(0, 0, 0, 1)",
         },
       },
       y: {
         grid: {
-          color: (context) => getColor(context.tick.value, "0.2"),
+          color: (context) => getColor(context.tick.value, "0.1"),
         },
         ticks: {
           stepSize: 50,
@@ -107,7 +107,7 @@ export default function StockSang() {
 
   return (
     <div className="h-screen w-full">
-      <div className="w-full h-1/3 mb-1 p-6 bg-gradient-to-b from-red-300 to-slate-200 rounded-xl flex flex-row items-center justify-between">
+      <div className="w-full h-1/3 mb-1 p-6 bg-gradient-to-b from-slate-400 to-slate-200 rounded-xl flex flex-row items-center justify-between">
         <div>
           <h2 className="font-semibold text-lg">Groupes sanguins en manque</h2>
           <ul className="font-light">
@@ -123,7 +123,7 @@ export default function StockSang() {
         <div className="flex flex-row gap-2">
           <h2 className="font-semibold">Changer la limite</h2>
           <select
-            className="w-24 rounded-md"
+            className="w-24 rounded-md focus:ring-red-600 focus:ring-2 focus:outline-none"
             onChange={(event) => updateLimite(event.target.value)}
           >
             <option value={100}>100</option>
@@ -133,13 +133,8 @@ export default function StockSang() {
           </select>
         </div>
       </div>
-      <div className="w-full h-2/3">
-        <Bar
-          className="bg-gradient-to-t from-slate-900 to-slate-200 rounded-xl p-4"
-          color="#fff"
-          data={data}
-          options={options}
-        ></Bar>
+      <div className="w-full h-2/3 bg-gradient-to-t from-slate-400 to-slate-200 rounded-xl p-4">
+        <Bar data={data} options={options}></Bar>
       </div>
     </div>
   );
