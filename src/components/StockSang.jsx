@@ -17,7 +17,12 @@ export default function StockSang() {
   const { limite, updateLimite } = useContext(LimitContext);
 
   useEffect(() => {
-    const stockCollectionRef = collection(db, "stock");
+    const stockCollectionRef = collection(
+      db,
+      "stock",
+      "afagnan@gmail.com",
+      "banque"
+    );
     const getStock = async () => {
       const data = await getDocs(stockCollectionRef);
       setStock(data.docs.map((doc) => ({ ...doc.data() })));

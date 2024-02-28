@@ -8,7 +8,12 @@ export default function Today() {
   const [stock, setStock] = useState([]);
 
   useEffect(() => {
-    const stockCollectionRef = collection(db, "stock");
+    const stockCollectionRef = collection(
+      db,
+      "stock",
+      "afagnan@gmail.com",
+      "banque"
+    );
     const entreeCollectionRef = collection(db, "dons");
     const sortieCollectionRef = collection(db, "sorties");
 
