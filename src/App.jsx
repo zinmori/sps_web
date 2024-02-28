@@ -1,10 +1,4 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import {
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { auth } from "./firebase-config.js";
 import Dashboard from "./pages/Dashboard.jsx";
 import Entree from "./pages/Entree.jsx";
 import Sortie from "./pages/Sortie.jsx";
@@ -13,32 +7,17 @@ import Rapport from "./pages/Rapport.jsx";
 import Urgence from "./pages/Urgence.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import Login from "./pages/Login.jsx";
-import { useState, useEffect } from "react";
-import { LimitProvider } from "./utils/Context.jsx";
+import { useContext } from "react";
+import { LimitProvider, AuthContext } from "./utils/Context.jsx";
 
 function App() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-  }, []);
-
-  async function login(email, password) {
-    await signInWithEmailAndPassword(auth, email, password);
-  }
-
-  async function logout() {
-    await signOut(auth);
-  }
-
+  const { user } = useContext(AuthContext);
   return (
     <main className="flex h-screen">
       {user ? (
         <LimitProvider>
           <Router>
-            <Sidebar logout={logout} />
+            <Sidebar />
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/entree" element={<Entree />} />
@@ -50,7 +29,7 @@ function App() {
           </Router>
         </LimitProvider>
       ) : (
-        <Login login={login} />
+        <Login />
       )}
     </main>
   );

@@ -1,21 +1,18 @@
 import { db } from "../firebase-config.js";
-import { collection, getDocs } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { getDocs, collection } from "firebase/firestore";
+import { useEffect, useState, useContext } from "react";
+import { AuthContext } from "../utils/Context.jsx";
 
 export default function Today() {
   const [entree, setEntree] = useState([]);
   const [sortie, setSortie] = useState([]);
   const [stock, setStock] = useState([]);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    const stockCollectionRef = collection(
-      db,
-      "stock",
-      "afagnan@gmail.com",
-      "banque"
-    );
-    const entreeCollectionRef = collection(db, "dons");
-    const sortieCollectionRef = collection(db, "sorties");
+    const stockCollectionRef = collection(db, "stock", user.email, "banque");
+    const entreeCollectionRef = collection(db, "dons", user.email, "data");
+    const sortieCollectionRef = collection(db, "sorties", user.email, "data");
 
     const getData = async () => {
       const stockData = await getDocs(stockCollectionRef);
@@ -26,7 +23,7 @@ export default function Today() {
       setSortie(sortieData.docs.map((doc) => ({ ...doc.data() })));
     };
     getData();
-  }, []);
+  }, [user]);
 
   const entreeToday = entree.reduce((acc, don) => {
     const today = new Date();

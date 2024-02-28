@@ -1,6 +1,9 @@
 import { IoIosLogOut } from "react-icons/io";
+import { useContext } from "react";
+import { AuthContext } from "../utils/Context.jsx";
 
-export default function Footer({ logout }) {
+export default function Footer() {
+  const { logout } = useContext(AuthContext);
   return (
     <div className="flex flex-col items-center border-t my-auto pt-4 w-full">
       <button

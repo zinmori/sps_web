@@ -3,17 +3,19 @@ import InfoItem from "../components/InfoItem.jsx";
 import { BiSolidDownload } from "react-icons/bi";
 import EvolutionDon from "../components/EvolutionDon.jsx";
 import Today from "../components/Today.jsx";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { db } from "../firebase-config.js";
 import { collection, getDocs } from "firebase/firestore";
+import { AuthContext } from "../utils/Context.jsx";
 
 export default function Dashboard() {
   const [donneurs, setDonneurs] = useState(0);
   const [dons, setDons] = useState(0);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const donneursCollectionRef = collection(db, "users");
-    const donsCollectionRef = collection(db, "dons");
+    const donsCollectionRef = collection(db, "dons", user.email, "data");
     const getData = async () => {
       const DonneursData = await getDocs(donneursCollectionRef);
       const DonsData = await getDocs(donsCollectionRef);
@@ -21,7 +23,7 @@ export default function Dashboard() {
       setDons(DonsData.docs.reduce((acc, doc) => acc + doc.data().quantite, 0));
     };
     getData();
-  }, []);
+  }, [user]);
 
   return (
     <div className="bg-slate-200 w-4/5 flex flex-row p-1 gap-1">

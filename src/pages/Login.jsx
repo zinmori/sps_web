@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import backgroundImage from "../assets/doctors.jpg";
 import logo from "../assets/sps_logo.png";
 import user from "../assets/account.png";
 import Progress from "../components/Progress.jsx";
+import { AuthContext } from "../utils/Context.jsx";
 
-export default function Login({ login }) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
+  const { login } = useContext(AuthContext);
 
   const emails = {
     cnts: "cnts@gmail.com",

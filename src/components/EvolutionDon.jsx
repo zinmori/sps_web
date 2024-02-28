@@ -1,8 +1,9 @@
 import { defaults } from "chart.js/auto";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Line } from "react-chartjs-2";
 import { db } from "../firebase-config.js";
 import { collection, getDocs } from "firebase/firestore";
+import { AuthContext } from "../utils/Context.jsx";
 
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
@@ -14,10 +15,11 @@ defaults.plugins.title.color = "black";
 export default function EvolutionDon() {
   const [entrees, setEntrees] = useState([]);
   const [sorties, setSorties] = useState([]);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    const entreeCollectionRef = collection(db, "dons");
-    const sortieCollectionRef = collection(db, "sorties");
+    const entreeCollectionRef = collection(db, "dons", user.email, "data");
+    const sortieCollectionRef = collection(db, "sorties", user.email, "data");
     const getData = async () => {
       const entreeData = await getDocs(entreeCollectionRef);
       const soriteData = await getDocs(sortieCollectionRef);
@@ -29,7 +31,7 @@ export default function EvolutionDon() {
     };
 
     getData();
-  }, []);
+  }, [user]);
   const entreeParMois = entrees
     .filter((don) => {
       const seconds = don.date.seconds;
