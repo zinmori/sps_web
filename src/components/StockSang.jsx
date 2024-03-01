@@ -126,6 +126,7 @@ export default function StockSang() {
           <select
             className="w-24 rounded-md focus:ring-red-600 focus:ring-2 focus:outline-none"
             onChange={(event) => updateLimite(event.target.value)}
+            value={limite}
           >
             <option value={100}>100</option>
             <option value={200}>200</option>
