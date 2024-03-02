@@ -108,7 +108,7 @@ export default function StockSang() {
 
   return (
     <div className="h-screen w-full">
-      <div className="w-full h-1/3 mb-1 p-6 bg-gradient-to-b from-slate-400 to-slate-200 rounded-xl flex flex-row items-center justify-between">
+      <div className="w-full h-1/3 mb-1 p-6 rounded-xl flex flex-row items-center justify-between">
         <div>
           <h2 className="font-semibold text-lg">Groupes sanguins en manque</h2>
           <ul className="font-light">
@@ -135,7 +135,7 @@ export default function StockSang() {
           </select>
         </div>
       </div>
-      <div className="w-full h-2/3 bg-gradient-to-t from-slate-400 to-slate-200 rounded-xl p-4">
+      <div className="w-full h-2/3 rounded-xl p-4">
         <Bar data={data} options={options}></Bar>
       </div>
     </div>

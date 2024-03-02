@@ -1,6 +1,5 @@
 import Giver from "../components/Giver.jsx";
-import { IoIosArrowBack } from "react-icons/io";
-import { IoIosArrowForward } from "react-icons/io";
+import NavigationButton from "../components/NavigationButton.jsx";
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config.js";
@@ -64,22 +63,6 @@ export default function Givers() {
     }
   }
 
-  const buttonStyle =
-    "font-semibold py-2 p-4 m-4 w-40 items-center justify-center flex flex-col rounded-full";
-
-  let prevStyle = buttonStyle;
-  if (currentPage === 0) {
-    prevStyle += " text-slate-600 cursor-not-allowed";
-  } else {
-    prevStyle += " hover:text-red-600";
-  }
-  let nextStyle = buttonStyle;
-  if (endIndex === givers.length) {
-    nextStyle += " text-slate-600 cursor-not-allowed";
-  } else {
-    nextStyle += " hover:text-red-600";
-  }
-
   return (
     <div className="bg-slate-200 w-4/5 flex flex-col items-center p-2 h-screen">
       <div className="w-max my-2 flex flex-row items-center justify-between gap-10">
@@ -130,17 +113,13 @@ export default function Givers() {
           </p>
         )}
       </div>
-      <div className="flex flex-row items-center">
-        <button onClick={handlePreviousPage} className={prevStyle}>
-          <IoIosArrowBack size={40} />
-          <p>Précedent</p>
-        </button>
-        <p>{currentPage + 1}</p>
-        <button onClick={handleNextPage} className={nextStyle}>
-          <IoIosArrowForward size={40} />
-          <p>Suivant</p>
-        </button>
-      </div>
+      <NavigationButton
+        currentPage={currentPage}
+        data={givers}
+        endIndex={endIndex}
+        onNextPage={handleNextPage}
+        onPreviousPage={handlePreviousPage}
+      />
     </div>
   );
 }

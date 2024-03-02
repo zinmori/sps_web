@@ -38,7 +38,7 @@ export default function Dashboard() {
         <div className="h-1/4 bg-slate-100 rounded-xl">
           <Today />
         </div>
-        <div className="h-1/2 bg-gradient-to-t from-slate-400 to-slate-200 p-4 rounded-xl text-center">
+        <div className="h-1/2 p-4 rounded-xl text-center">
           <EvolutionDon />
         </div>
         <div className="h-1/12">
