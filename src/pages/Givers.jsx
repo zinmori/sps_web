@@ -40,7 +40,7 @@ export default function Givers() {
       console.log(name);
       setGivers(originalGivers);
     } else {
-      const filteredGivers = [...givers].filter((giver) => {
+      const filteredGivers = [...originalGivers].filter((giver) => {
         return (
           giver.nom && giver.nom.toLowerCase().includes(name.toLowerCase())
         );
@@ -54,7 +54,7 @@ export default function Givers() {
       console.log(groupe);
       setGivers(originalGivers);
     } else {
-      const filteredGivers = [...givers].filter((giver) => {
+      const filteredGivers = [...originalGivers].filter((giver) => {
         return (
           giver.groupe_sanguin &&
           giver.groupe_sanguin.toLowerCase().includes(groupe.toLowerCase())
