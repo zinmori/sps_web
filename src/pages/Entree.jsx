@@ -4,6 +4,7 @@ import { collection, getDocs, addDoc } from "firebase/firestore";
 import { db } from "../firebase-config.js";
 import { AuthContext } from "../utils/Context";
 import NavigationButton from "../components/NavigationButton.jsx";
+import { UrgenceContext, StockContext } from "../utils/Context";
 
 export default function Entree() {
   const [entrees, setEntrees] = useState([]);
@@ -13,6 +14,8 @@ export default function Entree() {
   const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const { user } = useContext(AuthContext);
+  const { updateStock } = useContext(StockContext);
+  const { checkAndDelUrgence } = useContext(UrgenceContext);
 
   useEffect(() => {
     async function fetchEntrees() {
@@ -28,15 +31,15 @@ export default function Entree() {
       setEntrees(entreeList);
     }
     fetchEntrees();
-  }, [user.email]);
+  }, [user]);
 
   async function addEntree() {
+    const entreeCollectionRef = collection(db, "dons", user.email, "data");
     if (groupe === "" || quantite === "") {
       setError(true);
       return;
     }
     setError(false);
-    const entreeCollectionRef = collection(db, "dons", user.email, "data");
     const newEntree = {
       date: new Date(date),
       groupe: groupe,
@@ -45,9 +48,11 @@ export default function Entree() {
     await addDoc(entreeCollectionRef, newEntree);
     setQuantite("");
     setEntrees([newEntree, ...entrees]);
+    const newQuantite = await updateStock(groupe, parseInt(quantite));
+    await checkAndDelUrgence(groupe, newQuantite);
   }
-  const itemsPerPage = 5;
 
+  const itemsPerPage = 5;
   const startIndex = currentPage * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, entrees.length);
   const paginatedEntrees = entrees
@@ -63,6 +68,7 @@ export default function Entree() {
   function handlePreviousPage() {
     setCurrentPage((prevPage) => (prevPage === 0 ? prevPage : prevPage - 1));
   }
+
   return (
     <div className="text-center bg-slate-200 w-4/5 flex flex-col items-center">
       <InputForm>

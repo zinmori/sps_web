@@ -1,9 +1,7 @@
-import { useEffect, useState, useContext } from "react";
-import { db } from "../firebase-config.js";
-import { collection, getDocs } from "firebase/firestore";
+import { useContext } from "react";
 import { defaults } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
-import { LimitContext, AuthContext } from "../utils/Context.jsx";
+import { LimitContext, StockContext } from "../utils/Context.jsx";
 
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
@@ -13,18 +11,8 @@ defaults.plugins.title.font.size = 20;
 defaults.plugins.title.color = "black";
 
 export default function StockSang() {
-  const [stock, setStock] = useState([]);
+  const { stock } = useContext(StockContext);
   const { limite, updateLimite } = useContext(LimitContext);
-  const { user } = useContext(AuthContext);
-
-  useEffect(() => {
-    const stockCollectionRef = collection(db, "stock", user.email, "banque");
-    const getStock = async () => {
-      const data = await getDocs(stockCollectionRef);
-      setStock(data.docs.map((doc) => ({ ...doc.data() })));
-    };
-    getStock();
-  }, [user]);
 
   const sortedStock = stock.slice().sort((a, b) => {
     const groupeA = a.groupe.replace(/[+-]/g, "");

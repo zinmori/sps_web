@@ -1,15 +1,17 @@
-import RentreImg from "../assets/Rentre.jpg";
-import RurgenceImg from "../assets/Rurgence.jpg";
-import RsortieImg from "../assets/Rsortie.jpg";
-import accountImg from "../assets/account.png";
+import entreImg from "../assets/entre.jpg";
+import urgenceImg from "../assets/urgence.jpg";
+import sortieImg from "../assets/sortie.jpg";
+import genImg from "../assets/general.jpg";
+import RapportItem from "../components/RapportItem.jsx";
+
 export default function Rapport() {
   return (
-    <div className="text-center bg-black-200 w-4/5 p-24 flex items-center justify-center">
-      <div className="grid grid-cols-2 gap-4">
-        <img src={accountImg} alt="" className="w-1/2 h-auto" />
-        <img src={RentreImg} alt="" className="w-1/2 h-auto" />
-        <img src={RsortieImg} alt="" className="w-1/2 h-auto" />
-        <img src={RurgenceImg} alt="" className="w-1/2 h-auto" />
+    <div className="w-4/5 flex justify-center items-center h-screen bg-slate-200">
+      <div className="grid grid-cols-2 gap-8">
+        <RapportItem title="Rapport Général" img={genImg} />
+        <RapportItem title="Rapport sur les Entrées" img={entreImg} />
+        <RapportItem title="Rapport sur les Sorties" img={sortieImg} />
+        <RapportItem title="Rapport sur les Urgences" img={urgenceImg} />
       </div>
     </div>
   );

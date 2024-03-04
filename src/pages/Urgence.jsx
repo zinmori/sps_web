@@ -1,116 +1,72 @@
-import { FaPlus } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { useContext, useState } from "react";
+import { UrgenceContext } from "../utils/Context";
+import { RiAlarmWarningLine } from "react-icons/ri";
+import NavigationButton from "../components/NavigationButton";
 
 export default function Urgence() {
-  const [urgences, setUrgences] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
+  const { urgences } = useContext(UrgenceContext);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  useEffect(() => {
-    const urgencesData = localStorage.getItem("urgences");
-    if (urgencesData) {
-      setUrgences(JSON.parse(urgencesData));
-    }
-  }, []);
+  urgences.sort((a, b) => b.date - a.date);
 
-  const handleUrgenceSignalée = () => {
-    const groupeSanguin = document.getElementById("gs").value;
-    if (!groupeSanguin) {
-      setErrorMessage("Veuillez choisir un groupe sanguin");
-      return;
-    }
-    setErrorMessage("");
+  const itemsPerPage = 5;
+  const startIndex = currentPage * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, urgences.length);
+  const paginatedUrgences = urgences
+    .sort((a, b) => b.date - a.date)
+    .slice(startIndex, endIndex);
 
-    const date = new Date().toLocaleDateString();
-    const nouvelleUrgence = {
-      date,
-      groupeSanguin,
-      statut: "Non satisfait",
-    };
-    const nouvellesUrgences = [...urgences, nouvelleUrgence];
-    setUrgences(nouvellesUrgences);
-    localStorage.setItem("urgences", JSON.stringify(nouvellesUrgences));
-  };
+  function handleNextPage() {
+    setCurrentPage((prevPage) =>
+      endIndex === urgences.length ? prevPage : prevPage + 1
+    );
+  }
 
-  const handleStatutSatisfait = (index) => {
-    const nouvellesUrgences = [...urgences];
-    nouvellesUrgences[index].statut = "Satisfait";
-    setUrgences(nouvellesUrgences);
-    localStorage.setItem("urgences", JSON.stringify(nouvellesUrgences));
-  };
+  function handlePreviousPage() {
+    setCurrentPage((prevPage) => (prevPage === 0 ? prevPage : prevPage - 1));
+  }
 
   return (
-    <div className="text-center bg-slate-200 w-4/5">
-      <br />
-      <br />
-      <div className="flex justify-center">
-        <div className="mb-8 mx-4">
-          <select
-            id="gs"
-            name="gs"
-            defaultValue=""
-            className="mt-1 block w-full py-2 px-3 border border-white bg-white rounded-xl"
-          >
-            <option value="" disabled>
-              Groupe Sanguin
-            </option>
-            <option value="O plus">O+</option>
-            <option value="O moins">O-</option>
-            <option value="A plus">A+</option>
-            <option value="A moins">A-</option>
-            <option value="B plus">B+</option>
-            <option value="B moins">B-</option>
-            <option value="AB plus">AB+</option>
-            <option value="AB moins">AB-</option>
-          </select>
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-        </div>
-        <button
-          onClick={handleUrgenceSignalée}
-          className="border border-red-500 rounded-full px-1 py-2 flex items-center justify-center text-red-500 bg-white"
-        >
-          <FaPlus className="mr-2" />
-          Signaler une urgence
-        </button>
+    <div className="text-center bg-slate-200 w-4/5 flex flex-col items-center justify-center">
+      <div className="flex flex-row items-center gap-4 m-2 bg-white rounded-lg p-2">
+        <RiAlarmWarningLine size={90} className="text-red-600" />
+        <h1 className="text-2xl font-semibold my-4">Urgences Signalées</h1>
       </div>
-      <div>
-        <h2>Urgences signalées :</h2>
-        <table className="border-collapse border border-gray-400 w-full">
-          <thead>
-            <tr>
-              <th className="border border-gray-400 px-4 py-2">
-                Date de signalement
-              </th>
-              <th className="border border-gray-400 px-4 py-2">
-                Groupe Sanguin
-              </th>
-              <th className="border border-gray-400 px-4 py-2">Statut</th>
-              <th className="border border-gray-400 px-4 py-2">Actions</th>
+      <div className="rounded-md bg-white w-4/5 m-auto p-4">
+        <table className="table-auto my-4 w-full">
+          <thead className="bg-gray-200">
+            <tr className="text-center text-gray-700">
+              <th className="py-2 px-4">Date de signalement</th>
+              <th className="py-2 px-4">Groupe</th>
+              <th className="py-2 px-4">Statut</th>
             </tr>
           </thead>
-          <tbody>
-            {urgences.map((urgence, index) => (
-              <tr key={index}>
-                <td className="border border-gray-400 px-4 py-2">
-                  {urgence.date}
+          <tbody className="divide-y divide-gray-200">
+            {paginatedUrgences.map((urgence, index) => (
+              <tr key={index} className="text-gray-800">
+                <td className="py-2 px-4">
+                  {urgence.date.toLocaleDateString()}
                 </td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {urgence.groupeSanguin}
-                </td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {urgence.statut}
-                </td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {urgence.statut === "Non satisfait" && (
-                    <button onClick={() => handleStatutSatisfait(index)}>
-                      Marquer comme satisfait
-                    </button>
-                  )}
+                <td className="py-2 px-4">{urgence.groupe}</td>
+                <td
+                  className={`py-2 px-4 rounded-md ${
+                    urgence.satisfait ? "bg-green-600" : "bg-red-600"
+                  }`}
+                >
+                  {urgence.satisfait ? "Satisfait" : "En cours..."}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <NavigationButton
+        data={urgences}
+        currentPage={currentPage}
+        endIndex={endIndex}
+        onNextPage={handleNextPage}
+        onPreviousPage={handlePreviousPage}
+      />
     </div>
   );
 }
