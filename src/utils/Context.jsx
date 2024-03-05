@@ -24,13 +24,19 @@ export const StockContext = createContext();
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------
 
-async function sendNotification(groupe, email) {
+const CENTRES = await getDocs(collection(db, "centres")).then(
+  (querySnapshot) => {
+    return querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  }
+);
+
+async function sendNotification(groupe, centre) {
   const notificationData = {
     notification: {
       title: "Urgence",
-      body: `${email} a besoin de ${groupe}. Faites un geste et sauvez des vies !`,
+      body: `${centre} a besoin de ${groupe}. Faites un geste et sauvez des vies !`,
     },
-    to: "/topics/all",
+    to: "/topics/urgence",
   };
 
   await fetch("https://fcm.googleapis.com/fcm/send", {
@@ -115,15 +121,11 @@ export const UrgenceProvider = ({ children }) => {
   const [urgences, setUrgences] = useState([]);
   const { user } = useContext(AuthContext);
   const { limite } = useContext(LimitContext);
+  const centre = CENTRES.find((centre) => centre.email === user.email);
 
   useEffect(() => {
     async function fetchUrgences() {
-      const urgenceCollectionRef = collection(
-        db,
-        "urgences",
-        user.email,
-        "data"
-      );
+      const urgenceCollectionRef = collection(db, "urgences");
       const urgenceSnapshot = await getDocs(urgenceCollectionRef);
 
       const urgenceList = urgenceSnapshot.docs.map((doc) => {
@@ -137,12 +139,16 @@ export const UrgenceProvider = ({ children }) => {
       setUrgences(urgenceList);
     }
     fetchUrgences();
-  }, [user]);
+  }, []);
 
   async function checkAndAddUrgence(groupe, quantite) {
     console.log("checkAndAddUrgence...");
     for (let i = 0; i < urgences.length; i++) {
-      if (urgences[i].groupe === groupe && !urgences[i].satisfait) {
+      if (
+        urgences[i].groupe === groupe &&
+        !urgences[i].satisfait &&
+        urgences[i].centre === centre.nom
+      ) {
         console.log("Unsatified urgence already exists for this groupe.");
         return;
       }
@@ -151,18 +157,19 @@ export const UrgenceProvider = ({ children }) => {
       console.log(limite, quantite, "Stock is sufficient for this groupe.");
       return;
     }
-    const urgenceCollectionRef = collection(db, "urgences", user.email, "data");
+    const urgenceCollectionRef = collection(db, "urgences");
 
     console.log("Adding new urgence...");
     const newUrgence = {
       date: new Date(),
       groupe: groupe,
       satisfait: false,
+      centre: centre.nom,
     };
 
     await addDoc(urgenceCollectionRef, newUrgence);
     setUrgences([newUrgence, ...urgences]);
-    sendNotification(groupe, user.email);
+    sendNotification(groupe, centre.nom);
   }
 
   async function checkAndDelUrgence(groupe, quantite) {
@@ -170,12 +177,15 @@ export const UrgenceProvider = ({ children }) => {
       console.log(limite, quantite, "Stock is insufficient for this groupe.");
       return;
     }
-    const urgenceCollectionRef = collection(db, "urgences", user.email, "data");
 
     for (let i = 0; i < urgences.length; i++) {
-      if (urgences[i].groupe === groupe && !urgences[i].satisfait) {
+      if (
+        urgences[i].groupe === groupe &&
+        !urgences[i].satisfait &&
+        urgences[i].centre === centre.nom
+      ) {
         console.log("Deleting urgence...");
-        const urgenceRef = doc(urgenceCollectionRef, urgences[i].id);
+        const urgenceRef = doc(db, "urgences", urgences[i].id);
         await updateDoc(urgenceRef, { satisfait: true });
         setUrgences((prevUrgences) =>
           prevUrgences.map((urgence) =>
