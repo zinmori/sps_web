@@ -14,7 +14,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../firebase-config.js";
-import { SERVER_KEY } from "../../constants.js";
+import { SERVER_KEY } from "../constants.js";
 
 export const LimitContext = createContext();
 export const AuthContext = createContext();
