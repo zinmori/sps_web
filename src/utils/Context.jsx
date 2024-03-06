@@ -24,12 +24,6 @@ export const StockContext = createContext();
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------
 
-const CENTRES = await getDocs(collection(db, "centres")).then(
-  (querySnapshot) => {
-    return querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-  }
-);
-
 async function sendNotification(groupe, centre) {
   const notificationData = {
     notification: {
@@ -121,7 +115,7 @@ export const UrgenceProvider = ({ children }) => {
   const [urgences, setUrgences] = useState([]);
   const { user } = useContext(AuthContext);
   const { limite } = useContext(LimitContext);
-  const centre = CENTRES.find((centre) => centre.email === user.email);
+  const [CENTRES, setCENTRES] = useState([]);
 
   useEffect(() => {
     async function fetchUrgences() {
@@ -137,9 +131,20 @@ export const UrgenceProvider = ({ children }) => {
         };
       });
       setUrgences(urgenceList);
+      const cen = await getDocs(collection(db, "centres")).then(
+        (querySnapshot) => {
+          return querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+        }
+      );
+      setCENTRES(cen);
     }
     fetchUrgences();
   }, []);
+
+  const centre = CENTRES.find((centre) => centre.email === user.email);
 
   async function checkAndAddUrgence(groupe, quantite) {
     console.log("checkAndAddUrgence...");
