@@ -21,6 +21,15 @@ export const AuthContext = createContext();
 export const UrgenceContext = createContext();
 export const StockContext = createContext();
 
+const CENTRES = await getDocs(collection(db, "centres")).then(
+  (querySnapshot) => {
+    return querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+  }
+);
+
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------
 
@@ -115,39 +124,31 @@ export const UrgenceProvider = ({ children }) => {
   const [urgences, setUrgences] = useState([]);
   const { user } = useContext(AuthContext);
   const { limite } = useContext(LimitContext);
-  const [CENTRES, setCENTRES] = useState([]);
 
   useEffect(() => {
     async function fetchUrgences() {
       const urgenceCollectionRef = collection(db, "urgences");
       const urgenceSnapshot = await getDocs(urgenceCollectionRef);
+      const centre = CENTRES.find((centre) => centre.email === user.email);
 
-      const urgenceList = urgenceSnapshot.docs.map((doc) => {
-        const seconds = doc.data().date.seconds;
-        return {
-          ...doc.data(),
-          date: new Date(seconds * 1000),
-          id: doc.id,
-        };
-      });
-      setUrgences(urgenceList);
-      const cen = await getDocs(collection(db, "centres")).then(
-        (querySnapshot) => {
-          return querySnapshot.docs.map((doc) => ({
+      const urgenceList = urgenceSnapshot.docs
+        .filter((doc) => doc.centre === centre.nom)
+        .map((doc) => {
+          const seconds = doc.data().date.seconds;
+          return {
             ...doc.data(),
+            date: new Date(seconds * 1000),
             id: doc.id,
-          }));
-        }
-      );
-      setCENTRES(cen);
+          };
+        });
+      setUrgences(urgenceList);
     }
     fetchUrgences();
-  }, []);
-
-  const centre = CENTRES.find((centre) => centre.email === user.email);
+  }, [user.email]);
 
   async function checkAndAddUrgence(groupe, quantite) {
     console.log("checkAndAddUrgence...");
+    const centre = CENTRES.find((centre) => centre.email === user.email);
     for (let i = 0; i < urgences.length; i++) {
       if (
         urgences[i].groupe === groupe &&
@@ -182,6 +183,7 @@ export const UrgenceProvider = ({ children }) => {
       console.log(limite, quantite, "Stock is insufficient for this groupe.");
       return;
     }
+    const centre = CENTRES.find((centre) => centre.email === user.email);
 
     for (let i = 0; i < urgences.length; i++) {
       if (
