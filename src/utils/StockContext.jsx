@@ -28,6 +28,9 @@ export const StockProvider = ({ children }) => {
     const old = stock.find((item) => item.groupe === groupe);
     console.log(old.quantite, "Updating stock...");
     const newQuantite = old.quantite + quantite;
+    if (newQuantite < 0) {
+      return "error";
+    }
     await updateDoc(stockRef, { quantite: newQuantite });
     setStock((prevStock) =>
       prevStock.map((item) =>

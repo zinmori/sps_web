@@ -12,7 +12,7 @@ export default function Entree() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [groupe, setGroupe] = useState("A+");
   const [quantite, setQuantite] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const { user } = useContext(AuthContext);
   const { updateStock } = useContext(StockContext);
@@ -36,20 +36,24 @@ export default function Entree() {
 
   async function addEntree() {
     const entreeCollectionRef = collection(db, "dons", user.email, "data");
-    if (groupe === "" || quantite === "") {
-      setError(true);
+    if (groupe === "" || quantite === "" || quantite.includes("-")) {
+      setError("Veuillez fournir des valeurs valides.");
       return;
     }
-    setError(false);
     const newEntree = {
       date: new Date(date),
       groupe: groupe,
       quantite: parseInt(quantite),
     };
-    await addDoc(entreeCollectionRef, newEntree);
-    setQuantite("");
-    setEntrees([newEntree, ...entrees]);
     const newQuantite = await updateStock(groupe, parseInt(quantite));
+    if (newQuantite === "error") {
+      setError("Operation impossible. Stock insuffisant.");
+      return;
+    }
+    setError("");
+    setQuantite("");
+    await addDoc(entreeCollectionRef, newEntree);
+    setEntrees([newEntree, ...entrees]);
     await checkAndDelUrgence(groupe, newQuantite);
   }
 
@@ -107,10 +111,8 @@ export default function Entree() {
         >
           Ajouter
         </button>
-        {error && (
-          <p className="text-red-600 font-light">
-            Veuillez remplir tous les champs.
-          </p>
+        {error.length !== 0 && (
+          <p className="text-red-600 font-light">{error}</p>
         )}
       </InputForm>
       <div className="w-4/5 bg-white mx-4 p-4 rounded-md">

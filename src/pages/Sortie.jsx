@@ -13,7 +13,7 @@ export default function Sortie() {
   const [groupe, setGroupe] = useState("A+");
   const [quantite, setQuantite] = useState("");
   const [hopital, setHopital] = useState("CHU Campus");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const { user } = useContext(AuthContext);
   const { updateStock } = useContext(StockContext);
@@ -36,12 +36,11 @@ export default function Sortie() {
   }, [user]);
 
   async function addSortie() {
-    if (groupe === "" || quantite === "") {
+    if (groupe === "" || quantite === "" || quantite.includes("-")) {
       console.log(groupe, quantite, hopital, date);
-      setError(true);
+      setError("Veuillez fournir des valeurs valides.");
       return;
     }
-    setError(false);
     const sortieCollectionRef = collection(db, "sorties", user.email, "data");
     const newSortie = {
       date: new Date(date),
@@ -49,10 +48,15 @@ export default function Sortie() {
       quantite: parseInt(quantite),
       hopital: hopital,
     };
-    await addDoc(sortieCollectionRef, newSortie);
-    setQuantite("");
-    setSorties([newSortie, ...sorties]);
     const newQuantite = await updateStock(groupe, -parseInt(quantite));
+    if (newQuantite === "error") {
+      setError("Operation impossible. Stock insuffisant.");
+      return;
+    }
+    setError("");
+    setQuantite("");
+    await addDoc(sortieCollectionRef, newSortie);
+    setSorties([newSortie, ...sorties]);
     await checkAndAddUrgence(groupe, newQuantite);
   }
 
@@ -123,10 +127,8 @@ export default function Sortie() {
         >
           Ajouter
         </button>
-        {error && (
-          <p className="text-red-600 font-light">
-            Veuillez remplir tous les champs.
-          </p>
+        {error.length !== 0 && (
+          <p className="text-red-600 font-light">{error}</p>
         )}
       </InputForm>
       <div className="w-4/5 bg-white mx-4 p-4 rounded-md">
