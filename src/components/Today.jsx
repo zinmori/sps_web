@@ -1,7 +1,7 @@
 import { db } from "../firebase-config.js";
 import { getDocs, collection } from "firebase/firestore";
 import { useEffect, useState, useContext } from "react";
-import { AuthContext } from "../utils/Context.jsx";
+import { AuthContext } from "../utils/AuthContext.jsx";
 
 export default function Today() {
   const [entree, setEntree] = useState([]);

@@ -1,6 +1,6 @@
 import { IoIosLogOut } from "react-icons/io";
 import { useContext } from "react";
-import { AuthContext } from "../utils/Context.jsx";
+import { AuthContext } from "../utils/AuthContext.jsx";
 
 export default function Footer() {
   const { logout } = useContext(AuthContext);

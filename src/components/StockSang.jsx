@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { defaults } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
-import { LimitContext, StockContext } from "../utils/Context.jsx";
+import { UrgenceContext } from "../utils/UrgenceContext.jsx";
+import { StockContext } from "../utils/StockContext.jsx";
 
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
@@ -12,7 +13,7 @@ defaults.plugins.title.color = "black";
 
 export default function StockSang() {
   const { stock } = useContext(StockContext);
-  const { limite, updateLimite } = useContext(LimitContext);
+  const { limite, updateLimite } = useContext(UrgenceContext);
 
   const sortedStock = stock.slice().sort((a, b) => {
     const groupeA = a.groupe.replace(/[+-]/g, "");

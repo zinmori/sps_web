@@ -3,7 +3,7 @@ import backgroundImage from "../assets/doctors.jpg";
 import logo from "../assets/sps_logo.png";
 import user from "../assets/account.png";
 import Progress from "../components/Progress.jsx";
-import { AuthContext } from "../utils/Context.jsx";
+import { AuthContext } from "../utils/AuthContext.jsx";
 
 export default function Login() {
   const [email, setEmail] = useState("");

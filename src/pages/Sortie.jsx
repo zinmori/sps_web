@@ -2,7 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import InputForm from "../components/InputForm.jsx";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { db } from "../firebase-config.js";
-import { AuthContext, StockContext, UrgenceContext } from "../utils/Context";
+import { UrgenceContext } from "../utils/UrgenceContext.jsx";
+import { StockContext } from "../utils/StockContext.jsx";
+import { AuthContext } from "../utils/AuthContext.jsx";
 import NavigationButton from "../components/NavigationButton.jsx";
 
 export default function Sortie() {

@@ -2,14 +2,15 @@ import { useContext, useEffect, useState } from "react";
 import InputForm from "../components/InputForm.jsx";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { db } from "../firebase-config.js";
-import { AuthContext } from "../utils/Context";
+import { AuthContext } from "../utils/AuthContext.jsx";
 import NavigationButton from "../components/NavigationButton.jsx";
-import { UrgenceContext, StockContext } from "../utils/Context";
+import { UrgenceContext } from "../utils/UrgenceContext.jsx";
+import { StockContext } from "../utils/StockContext.jsx";
 
 export default function Entree() {
   const [entrees, setEntrees] = useState([]);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [groupe, setGroupe] = useState("");
+  const [groupe, setGroupe] = useState("A+");
   const [quantite, setQuantite] = useState("");
   const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);

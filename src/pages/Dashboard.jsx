@@ -6,7 +6,7 @@ import Today from "../components/Today.jsx";
 import { useEffect, useState, useContext } from "react";
 import { db } from "../firebase-config.js";
 import { collection, getDocs } from "firebase/firestore";
-import { AuthContext } from "../utils/Context.jsx";
+import { AuthContext } from "../utils/AuthContext.jsx";
 
 export default function Dashboard() {
   const [donneurs, setDonneurs] = useState(0);
