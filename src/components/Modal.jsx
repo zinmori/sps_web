@@ -1,34 +1,23 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
-import { createPortal } from "react-dom";
+import { useRef, useEffect } from "react";
 
-const Modal = forwardRef(function Modal({ children, buttonCaption }, ref) {
+export default function Modal({ open, children, onClose }) {
   const dialog = useRef();
-  useImperativeHandle(ref, () => {
-    return {
-      open() {
-        dialog.current.showModal();
-      },
-    };
-  });
-  return createPortal(
-    <dialog
-      ref={dialog}
-      className="backdrop:bg-stone-900/90 p-4 rounded-md shadow-md "
-    >
-      {children}
-      <p className="mt-4 text-right">
-        <button
-          className="px-4 py-2 text-xs md:text-base rounded-md bg-stone-700 text-stone-400 hover:bg-stone-600 hover:text-stone-100"
-          onClick={() => {
-            dialog.current.close();
-          }}
-        >
-          {buttonCaption}
-        </button>
-      </p>
-    </dialog>,
-    document.getElementById("modal-root")
-  );
-});
 
-export default Modal;
+  useEffect(() => {
+    if (open) {
+      dialog.current.showModal();
+    } else {
+      dialog.current.close();
+    }
+  }, [open]);
+
+  return (
+    <dialog
+      className="w-96 rounded-md p-4 backdrop:bg-opacity-50 backdrop:bg-black"
+      ref={dialog}
+      onClose={onClose}
+    >
+      {open ? children : null}
+    </dialog>
+  );
+}

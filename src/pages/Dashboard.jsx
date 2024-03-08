@@ -1,6 +1,5 @@
 import StockSang from "../components/StockSang.jsx";
 import InfoItem from "../components/InfoItem.jsx";
-import { BiSolidDownload } from "react-icons/bi";
 import EvolutionDon from "../components/EvolutionDon.jsx";
 import Today from "../components/Today.jsx";
 import { useEffect, useState, useContext } from "react";
@@ -31,7 +30,7 @@ export default function Dashboard() {
         <StockSang />
       </div>
       <div className="w-2/5 h-full flex flex-col gap-1">
-        <div className="h-1/6 rounded-xl flex flex-row items-center justify-center gap-1">
+        <div className="h-1/4 rounded-xl flex flex-row items-center justify-center gap-1">
           <InfoItem title="Donneurs" chiffre={`+ ${donneurs}`} />
           <InfoItem title="Dons" chiffre={`+ ${dons}`} />
         </div>
@@ -40,11 +39,6 @@ export default function Dashboard() {
         </div>
         <div className="h-1/2 p-4 rounded-xl text-center">
           <EvolutionDon />
-        </div>
-        <div className="h-1/12">
-          <button className="w-full rounded-md ring-2 ring-red-600 bg-gradient-to-b from-red-600 to-slate-200 py-2 flex items-center justify-center gap-2 text-red-600 hover:text-white">
-            <BiSolidDownload size={20} /> Telecharger ce rapport en PDF
-          </button>
         </div>
       </div>
     </div>
