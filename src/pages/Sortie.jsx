@@ -64,7 +64,7 @@ export default function Sortie() {
     setQuantite("");
     setOpen(false);
     await addDoc(sortieCollectionRef, newSortie);
-    setSorties([newSortie, ...sorties]);
+    setSorties((sorties) => [newSortie, ...sorties]);
     await checkAndAddUrgence(groupe, newQuantite);
   }
 

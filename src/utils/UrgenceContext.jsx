@@ -116,9 +116,14 @@ export const UrgenceProvider = ({ children }) => {
       centre: centre.nom,
     };
 
-    setUrgences([newUrgence, ...urgences]);
-    await addDoc(urgenceCollectionRef, newUrgence);
-    sendNotification(groupe, centre.nom);
+    const newUrgenceWithIdRef = await addDoc(urgenceCollectionRef, newUrgence);
+    const newUrgenceWithId = await getDoc(newUrgenceWithIdRef).then((doc) => ({
+      ...doc.data(),
+      date: new Date(doc.data().date.seconds * 1000),
+      id: doc.id,
+    }));
+    setUrgences((urgences) => [newUrgenceWithId, ...urgences]);
+    await sendNotification(groupe, centre.nom);
     //window.location.reload();
   }
 
