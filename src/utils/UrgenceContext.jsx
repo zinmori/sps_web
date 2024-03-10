@@ -166,7 +166,7 @@ export const UrgenceProvider = ({ children }) => {
       for (let i = 0; i < 8; i++) {
         const groupe = groupes[i];
         const quantite = stock.find((item) => item.groupe === groupe).quantite;
-        checkAndAddUrgence(groupe, quantite);
+        await checkAndAddUrgence(groupe, quantite);
       }
     }
     if (oldLimite > newLimite) {
