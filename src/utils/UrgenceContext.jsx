@@ -119,7 +119,7 @@ export const UrgenceProvider = ({ children }) => {
     setUrgences([newUrgence, ...urgences]);
     await addDoc(urgenceCollectionRef, newUrgence);
     sendNotification(groupe, centre.nom);
-    window.location.reload();
+    //window.location.reload();
   }
 
   async function checkAndDelUrgence(groupe, quantite) {
