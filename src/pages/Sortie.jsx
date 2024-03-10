@@ -43,11 +43,6 @@ export default function Sortie() {
       setError("Veuillez fournir des valeurs valides.");
       return;
     }
-    const newQuantite = await updateStock(groupe, parseInt(quantite));
-    if (newQuantite === "error") {
-      setError("Operation impossible. Stock insuffisant.");
-      return;
-    }
     setOpen(true);
   }
 
@@ -60,7 +55,11 @@ export default function Sortie() {
       hopital: hopital,
     };
     const newQuantite = await updateStock(groupe, -parseInt(quantite));
-
+    if (newQuantite < 0) {
+      alert("La quantité de sang disponible est insuffisante.");
+      setOpen(false);
+      return;
+    }
     setError("");
     setQuantite("");
     setOpen(false);
