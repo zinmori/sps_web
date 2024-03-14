@@ -13,7 +13,7 @@ export default function Modal({ open, children, onClose }) {
 
   return (
     <dialog
-      className="w-96 rounded-md p-4 backdrop:bg-opacity-50 backdrop:bg-black"
+      className="w-2/5 rounded-md p-4 backdrop:bg-opacity-50 backdrop:bg-black"
       ref={dialog}
       onClose={onClose}
     >

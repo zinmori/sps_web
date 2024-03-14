@@ -6,7 +6,6 @@ import { AuthContext } from "../utils/AuthContext.jsx";
 import NavigationButton from "../components/NavigationButton.jsx";
 import { UrgenceContext } from "../utils/UrgenceContext.jsx";
 import { StockContext } from "../utils/StockContext.jsx";
-import { MdDelete } from "react-icons/md";
 import Modal from "../components/Modal.jsx";
 
 export default function Entree() {
@@ -30,6 +29,7 @@ export default function Entree() {
         return {
           ...doc.data(),
           date: new Date(seconds * 1000),
+          id: doc.id,
         };
       });
       setEntrees(entreeList);
@@ -38,13 +38,13 @@ export default function Entree() {
   }, [user]);
 
   async function showModal() {
-    if (groupe === "" || quantite === "" || quantite.includes("-")) {
+    if (
+      groupe === "" ||
+      quantite === "" ||
+      quantite === "0" ||
+      quantite.includes("-")
+    ) {
       setError("Veuillez fournir des valeurs valides.");
-      return;
-    }
-    const newQuantite = await updateStock(groupe, parseInt(quantite));
-    if (newQuantite === "error") {
-      setError("Operation impossible. Stock insuffisant.");
       return;
     }
     setOpen(true);
@@ -57,10 +57,10 @@ export default function Entree() {
       groupe: groupe,
       quantite: parseInt(quantite),
     };
-    const newQuantite = await updateStock(groupe, parseInt(quantite));
     setError("");
     setQuantite("");
     setOpen(false);
+    const newQuantite = await updateStock(groupe, parseInt(quantite));
     await addDoc(entreeCollectionRef, newEntree);
     setEntrees([newEntree, ...entrees]);
     await checkAndDelUrgence(groupe, newQuantite);
@@ -87,6 +87,10 @@ export default function Entree() {
     <div className="text-center bg-slate-200 w-4/5 flex flex-col items-center">
       <Modal open={open} onClose={() => setOpen(false)}>
         <h2 className="font-semibold text-xl mb-4 text-left">Confirmation</h2>
+        <p className="font-semibold text-red-600">
+          Veuillez bien verifier, vous ne pourez plus modifier après.
+        </p>
+        <br />
         <p className="mb-2">
           Date : <span className="font-semibold">{date}</span>{" "}
         </p>
@@ -157,7 +161,6 @@ export default function Entree() {
               <th className="py-2 px-4">Date</th>
               <th className="py-2 px-4">Groupe</th>
               <th className="py-2 px-4">Quantité</th>
-              <th className="py-2 px-4">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -168,14 +171,6 @@ export default function Entree() {
                 </td>
                 <td className="py-2 px-4">{entree.groupe}</td>
                 <td className="py-2 px-4">{entree.quantite}</td>
-                <td className="py-2 px-4 flex items-center justify-center">
-                  <button className="bg-yellow-600 text-white p-2 rounded-md hover:bg-yellow-700 mr-2">
-                    Modifier
-                  </button>
-                  <button className="bg-red-600 text-white p-2 rounded-md hover:bg-red-700">
-                    <MdDelete size={20} />
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>

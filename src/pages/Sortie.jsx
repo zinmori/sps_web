@@ -7,7 +7,6 @@ import { StockContext } from "../utils/StockContext.jsx";
 import { AuthContext } from "../utils/AuthContext.jsx";
 import NavigationButton from "../components/NavigationButton.jsx";
 import Modal from "../components/Modal.jsx";
-import { MdDelete } from "react-icons/md";
 
 export default function Sortie() {
   const [sorties, setSorties] = useState([]);
@@ -31,6 +30,7 @@ export default function Sortie() {
         return {
           ...doc.data(),
           date: new Date(seconds * 1000),
+          id: doc.id,
         };
       });
       setSorties(sortieList);
@@ -55,7 +55,7 @@ export default function Sortie() {
       hopital: hopital,
     };
     const newQuantite = await updateStock(groupe, -parseInt(quantite));
-    if (newQuantite < 0) {
+    if (newQuantite === "error") {
       alert("La quantité de sang disponible est insuffisante.");
       setOpen(false);
       return;
@@ -89,6 +89,10 @@ export default function Sortie() {
     <div className="text-center bg-slate-200 w-4/5 flex flex-col items-center">
       <Modal open={open} onClose={() => setOpen(false)}>
         <h2 className="font-semibold text-xl mb-4 text-left">Confirmation</h2>
+        <p className="font-semibold text-red-600">
+          Veuillez bien verifier, vous ne pourrez plus modifier après
+        </p>
+        <br />
         <p className="mb-2">
           Date : <span className="font-semibold">{date}</span>{" "}
         </p>
@@ -176,7 +180,6 @@ export default function Sortie() {
               <th className="py-2 px-4">Groupe</th>
               <th className="py-2 px-4">Quantité</th>
               <th className="py-2 px-4">Hôpital</th>
-              <th className="py-2 px-4">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -188,14 +191,6 @@ export default function Sortie() {
                 <td className="py-2 px-4">{sortie.groupe}</td>
                 <td className="py-2 px-4">{sortie.quantite}</td>
                 <td className="py-2 px-4">{sortie.hopital}</td>
-                <td className="py-2 px-4 flex items-center justify-center">
-                  <button className="bg-yellow-600 text-white p-2 rounded-md hover:bg-yellow-700 mr-2">
-                    Modifier
-                  </button>
-                  <button className="bg-red-600 text-white p-2 rounded-md hover:bg-red-700">
-                    <MdDelete size={20} />
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>
