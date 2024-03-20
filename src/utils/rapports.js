@@ -90,7 +90,7 @@ export const rapportEntreePDF = async (email) => {
 
 export const rapportSortiePDF = async (email) => {
   const doc = new jsPDF();
-  addFirstPage(doc, "RAPPORT SUUR LES SORTIES");
+  addFirstPage(doc, "RAPPORT SUR LES SORTIES");
   const headers = ["#", "Date", "Groupe sanguin", "Quantite", "Hôpital"];
   const attributes = ["date", "groupe", "quantite", "hopital"];
   const sortieCollectionRef = collection(db, "sorties", email, "data");
