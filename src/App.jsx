@@ -11,6 +11,7 @@ import { useContext } from "react";
 import { UrgenceProvider } from "./utils/UrgenceContext.jsx";
 import { AuthContext } from "./utils/AuthContext.jsx";
 import { StockProvider } from "./utils/StockContext.jsx";
+
 function App() {
   const { user } = useContext(AuthContext);
   return (
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/donneurs" element={<Givers />} />
                 <Route path="/rapport" element={<Rapport />} />
                 <Route path="/urgence" element={<Urgence />} />
+                <Route path="/*" element={<Dashboard />} />
               </Routes>
             </Router>
           </UrgenceProvider>
