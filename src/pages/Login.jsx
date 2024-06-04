@@ -125,6 +125,8 @@ export default function Login() {
             Vous ne trouvez pas votre centre de don dans la liste ?{" "}
             <a
               href="https://wa.me/22891355986"
+              target="_blank"
+              rel="noreferrer noopener"
               className="hover:text-blue-500 underline"
             >
               Contactez-nous
