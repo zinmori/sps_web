@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import backgroundImage from "../assets/doctors.jpg";
+import backgroundImage from "../assets/doctors.webp";
 import logo from "../assets/sps_logo.png";
 import user from "../assets/account.png";
 import Progress from "../components/Progress.jsx";
@@ -123,9 +123,12 @@ export default function Login() {
         <div className="mt-4">
           <p className="text-white">
             Vous ne trouvez pas votre centre de don dans la liste ?{" "}
-            <button className="hover:text-blue-500 underline">
+            <a
+              href="https://wa.me/22891355986"
+              className="hover:text-blue-500 underline"
+            >
               Contactez-nous
-            </button>{" "}
+            </a>{" "}
             pour créer un compte.
           </p>
         </div>
