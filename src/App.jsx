@@ -22,7 +22,7 @@ function App() {
   const isMobile = isMobileDevice();
   if (isMobile) {
     return (
-      <div className="flex flex-col items-center justify-center text-center">
+      <div className="flex flex-col h-screen font-semibold items-center justify-center text-center">
         <h1>Ce site n'est pas disponible sur les appareils mobiles.</h1>
         <p>Veuillez utiliser un ordinateur pour accéder à ce site.</p>
       </div>
