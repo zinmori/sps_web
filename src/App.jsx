@@ -12,8 +12,22 @@ import { UrgenceProvider } from "./utils/UrgenceContext.jsx";
 import { AuthContext } from "./utils/AuthContext.jsx";
 import { StockProvider } from "./utils/StockContext.jsx";
 
+function isMobileDevice() {
+  return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+}
 function App() {
   const { user } = useContext(AuthContext);
+  const isMobile = isMobileDevice();
+  if (isMobile) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center">
+        <h1>Ce site n'est pas disponible sur les appareils mobiles.</h1>
+        <p>Veuillez utiliser un ordinateur pour accéder à ce site.</p>
+      </div>
+    );
+  }
   return (
     <main className="flex h-screen">
       {user ? (
