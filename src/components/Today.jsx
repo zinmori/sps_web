@@ -31,7 +31,7 @@ export default function Today() {
     const todayString = today.toDateString();
     const seconds = don.date.seconds;
     if (new Date(seconds * 1000).toDateString() === todayString) {
-      acc += don.quantite;
+      acc += parseInt(don.quantite);
     }
     return acc;
   }, 0);
@@ -42,7 +42,7 @@ export default function Today() {
     const todayString = today.toDateString();
     const seconds = sortie.date.seconds;
     if (new Date(seconds * 1000).toDateString() === todayString) {
-      acc += sortie.quantite;
+      acc += parseInt(sortie.quantite);
     }
     return acc;
   }, 0);
