@@ -19,7 +19,7 @@ export default function Dashboard() {
       const DonneursData = await getDocs(donneursCollectionRef);
       const DonsData = await getDocs(donsCollectionRef);
       setDonneurs(DonneursData.docs.length);
-      setDons(DonsData.docs.reduce((acc, doc) => acc + doc.data().quantite, 0));
+      setDons(DonsData.docs.length);
     };
     getData();
   }, [user]);
