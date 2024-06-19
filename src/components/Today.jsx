@@ -48,7 +48,7 @@ export default function Today() {
   }, 0);
 
   const restantToday = stock.reduce((acc, item) => {
-    acc += item.quantite;
+    acc += parseInt(item.quantite);
     return acc;
   }, 0);
 
